@@ -1,23 +1,14 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	"os"
+
+	"github.com/jnieblas/wyrm/services"
 )
 
 func main() {
-	name := flag.String("name", "wyrm", "The name to greet.")
-	flag.Parse()
-
-	fmt.Printf("Hello, %s!\n", *name)
-	if flag.Arg(0) == "list" {
-		files, _ := os.Open(".")
-		defer files.Close()
-
-		fileInfo, _ := files.Readdir(-1)
-		for _, file := range fileInfo {
-			fmt.Println(file.Name())
-		}
-	}
+	services.ProvisionDB()
+	services.CreateScript()
+	res := services.GetScripts()
+	fmt.Println("res:", res)
 }
