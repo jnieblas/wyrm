@@ -20,10 +20,6 @@ func CreateScript(script *dto.Script) {
 		log.Println(err)
 		log.Fatalf("Unable to execute SQL: %s", sql)
 	}
-
-	fmt.Println("Script created successfully.")
-
-	GetScripts()
 }
 
 func GetScripts() []dto.Script {
@@ -51,6 +47,22 @@ func GetScripts() []dto.Script {
 	return scripts
 }
 
-// func GetScript(name string) dto.Script {
+func GetScript(name string) dto.Script {
+	db := driver.GetConnection()
+	defer db.Close()
 
-// }
+	sql := fmt.Sprintf("SELECT * FROM scripts where name = '%s'", name)
+	rows, err := db.Query(sql)
+
+	if err != nil {
+		log.Println(err)
+		log.Fatalf("Unable to execute SQL: %s", sql)
+	}
+
+	defer rows.Close()
+	log.Printf("Script '%s' fetched successfully.\n", name)
+
+	script := dto.Script{}
+	script.MapRow(rows)
+	return script
+}
