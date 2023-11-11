@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 
-	"github.com/jnieblas/wyrm/services"
+	"github.com/jnieblas/wyrm/dal"
+	"github.com/jnieblas/wyrm/migration"
 )
 
 func main() {
-	services.ProvisionDB()
-	services.CreateScript()
-	res := services.GetScripts()
+	migration.ProvisionDB()
+	dal.CreateScript()
+	res := dal.GetScripts()
 	fmt.Println("res:", res)
 }
