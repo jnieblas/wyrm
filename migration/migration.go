@@ -5,8 +5,9 @@ import (
 	"log"
 )
 
+// This only needs to be called on setup / update
 func ProvisionDB() {
-	log.SetPrefix("MIGRATION DEBUG: ")
+	log.SetPrefix("MIGRATION: ")
 	migration1_createScriptsTable()
 }
 
