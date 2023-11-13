@@ -39,11 +39,10 @@ func GetScript(name string) dto.Script {
 	db := driver.GetConnection()
 	defer db.Close()
 
-	sql := "SELECT * FROM scripts WHERE name = '?'"
-	fmt.Println("sql:", sql)
+	sql := "SELECT * FROM scripts WHERE name = ?"
 	row := db.QueryRow(sql, name)
 
-	log.Printf("Script '%s' fetched successfully.\n", name)
+	log.Printf("Script '%s' fetched successfully.", name)
 
 	script := dto.Script{}
 	script.MapRow(row)

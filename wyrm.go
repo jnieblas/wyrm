@@ -9,14 +9,13 @@ import (
 
 func main() {
 	// Create / update flags
-	create := flag.Bool("c", false, "Enable special behavior")
-	update := flag.Bool("u", false, "Enable special behavior")
-	info := flag.Bool("i", false, "List information about one or multiple scripts.")
-	name := flag.String("name", "", "Script name, used to reference a script.")
-	path := flag.String("path", "", "Path to script.")
-	command := flag.String("command", "", "Command needed to run script.")
-	description := flag.String("description", "", "Script description.")
-
+	create := flag.Bool("c", false, "Create a new script; requires -name, -path and -command")
+	update := flag.Bool("u", false, "Update an existing script; requires -name, -path and -command")
+	info := flag.Bool("i", false, "List information about one or multiple scripts")
+	name := flag.String("name", "", "Script name, used to reference a script")
+	path := flag.String("path", "", "Path to script")
+	command := flag.String("command", "", "Command needed to run script")
+	description := flag.String("description", "", "Script description")
 	flag.Parse()
 
 	if *create {
@@ -25,8 +24,7 @@ func main() {
 		}
 	} else if *update {
 		if validateRequiredFlags("u", name, path, command) {
-			// ToDo: update
-			// service.UpdateScript(name, path, command, description)
+			service.UpdateScript(name, path, command, description)
 		}
 	} else if *info {
 		if *name != "" {

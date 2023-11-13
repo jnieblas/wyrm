@@ -44,7 +44,7 @@ func GetScripts() {
 
 func GetScript(name *string) {
 	script := dao.GetScript(*name)
-	fmt.Println(script)
+	fmt.Print(script)
 }
 
 func ExecuteScript(name *string) {
