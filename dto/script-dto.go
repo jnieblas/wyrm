@@ -2,6 +2,7 @@ package dto
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 )
 
@@ -12,11 +13,29 @@ type Script struct {
 	Description string
 }
 
-func (script *Script) MapRow(rows *sql.Rows) {
+func (script *Script) MapRows(rows *sql.Rows) {
 	err := rows.Scan(&script.Name, &script.Path, &script.Command, &script.Description)
 	if err != nil {
+		fmt.Printf("Could not get script with values:\n%v", script)
 		log.Println(err)
 		log.Fatal("Unable to read results from scripts table.")
 	}
-	log.Printf("Script Mapping - Name: %s, Path: %s, Command: %s, Description: %s\n", script.Name, script.Path, script.Command, script.Description)
+}
+
+func (script *Script) MapRow(row *sql.Row) {
+	err := row.Scan(&script.Name, &script.Path, &script.Command, &script.Description)
+	if err != nil {
+		fmt.Printf("Could not get script with values:\n%v", script)
+		log.Println(err)
+		log.Fatal("Unable to read results from scripts table.")
+	}
+}
+
+func (script Script) String() string {
+	return fmt.Sprintf(`
+		Name: '%s'
+		Path: '%s'
+		Command: '%s'
+		Description: '%s'
+	`, script.Name, script.Path, script.Command, script.Description)
 }
