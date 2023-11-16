@@ -1,12 +1,13 @@
-package services
+package migration
 
 import (
 	"database/sql"
 	"log"
 )
 
+// This only needs to be called on install / version upgrade
 func ProvisionDB() {
-	log.SetPrefix("MIGRATION DEBUG: ")
+	log.SetPrefix("MIGRATION: ")
 	migration1_createScriptsTable()
 }
 
