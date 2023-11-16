@@ -2,12 +2,17 @@ package service
 
 import (
 	"fmt"
+	"os/exec"
+	"os/user"
+	"strings"
 
 	"github.com/jnieblas/wyrm/dao"
 	"github.com/jnieblas/wyrm/dto"
 )
 
 func CreateScript(name *string, path *string, command *string, description *string) {
+	formatHomeDir(path)
+
 	script := dto.Script{
 		Name:        *name,
 		Path:        *path,
@@ -21,6 +26,8 @@ func CreateScript(name *string, path *string, command *string, description *stri
 }
 
 func UpdateScript(name *string, path *string, command *string, description *string) {
+	formatHomeDir(path)
+
 	script := dto.Script{
 		Name:        *name,
 		Path:        *path,
@@ -49,6 +56,25 @@ func GetScript(name *string) {
 
 func ExecuteScript(name *string) {
 	script := dao.GetScript(*name)
+	cmd := exec.Command(script.Command)
+	cmd.Dir = script.Path
+	output, err := cmd.CombinedOutput()
 
-	fmt.Print(script)
+	if err != nil {
+		fmt.Println("Command execution error:", err)
+		return
+	}
+
+	fmt.Println(string(output))
+
+}
+
+func formatHomeDir(path *string) {
+	usr, err := user.Current()
+	if err != nil {
+		fmt.Println("Unable to find your home dir:", err)
+		return
+	}
+	*path = strings.Replace(*path, "~", usr.HomeDir, 1)
+
 }
