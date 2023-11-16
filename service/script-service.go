@@ -21,7 +21,6 @@ func CreateScript(name *string, path *string, command *string, description *stri
 	}
 
 	dao.CreateScript(&script)
-
 	fmt.Println("Script created successfully.")
 }
 
@@ -36,7 +35,6 @@ func UpdateScript(name *string, path *string, command *string, description *stri
 	}
 
 	dao.UpdateScript(&script)
-
 	fmt.Println("Script updated successfully.")
 }
 
@@ -64,9 +62,7 @@ func ExecuteScript(name *string) {
 		fmt.Println("Command execution error:", err)
 		return
 	}
-
 	fmt.Println(string(output))
-
 }
 
 func formatHomeDir(path *string) {
@@ -76,5 +72,4 @@ func formatHomeDir(path *string) {
 		return
 	}
 	*path = strings.Replace(*path, "~", usr.HomeDir, 1)
-
 }

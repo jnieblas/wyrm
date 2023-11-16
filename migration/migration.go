@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-// This only needs to be called on setup / update
+// This only needs to be called on install / version upgrade
 func ProvisionDB() {
 	log.SetPrefix("MIGRATION: ")
 	migration1_createScriptsTable()
