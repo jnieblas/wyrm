@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
+	"log"
 	"os"
 
 	"github.com/jnieblas/wyrm/migration"
@@ -12,6 +14,7 @@ import (
 func main() {
 	// Create / update flags
 	provision := flag.Bool("provision", false, "Provision database.")
+	enableLogging := flag.Bool("l", false, "Enable logging.")
 	create := flag.Bool("c", false, "Create a new script; requires -name, -path and -command")
 	update := flag.Bool("u", false, "Update an existing script; requires -name, -path and -command")
 	info := flag.Bool("i", false, "List information about one or multiple scripts")
@@ -24,6 +27,10 @@ func main() {
 	if *provision {
 		migration.ProvisionDB()
 		os.Exit(0)
+	}
+
+	if !*enableLogging {
+		log.SetOutput(io.Discard)
 	}
 
 	if *create {
