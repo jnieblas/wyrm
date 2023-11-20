@@ -1,5 +1,5 @@
 # wyrm
-Command line tool that simplifies command management &amp; exeuction.
+CLI tool that simplifies command execution & management.
 
 # Setup
 From root dir:
