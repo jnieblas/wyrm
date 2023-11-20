@@ -4,12 +4,20 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func GetConnection() *sql.DB {
-	db, err := sql.Open("sqlite3", "testdb.db")
+	dbPath, err := getDatabaseFilePath()
+	if err != nil {
+		fmt.Println("Unable to provision wyrm DB.")
+		log.Fatal("Encountered error while getting database file path:", err)
+	}
+
+	db, err := sql.Open("sqlite3", dbPath)
 
 	if err != nil {
 		log.Println(err)
@@ -37,4 +45,15 @@ func PrintTableMetadata(tableName string) {
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func getDatabaseFilePath() (string, error) {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+
+	dbPath := filepath.Join(homeDir, ".wyrm_db")
+
+	return dbPath, nil
 }
