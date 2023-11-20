@@ -9,9 +9,8 @@ import (
 )
 
 func main() {
-	// Create / update flags
-	provision := flag.Bool("provision", false, "Provision database.")
 	enableLogging := flag.Bool("l", false, "Enable logging.")
+	provision := flag.Bool("provision", false, "Provision database.")
 	create := flag.Bool("c", false, "Create a new script; requires -name, -path and -command")
 	update := flag.Bool("u", false, "Update an existing script; requires -name, -path and -command")
 	info := flag.Bool("i", false, "List information about one or multiple scripts")
@@ -21,13 +20,13 @@ func main() {
 	description := flag.String("description", "", "Script description")
 	flag.Parse()
 
+	if !*enableLogging {
+		log.SetOutput(io.Discard)
+	}
+
 	if *provision {
 		provisionDB()
 		os.Exit(0)
-	}
-
-	if !*enableLogging {
-		log.SetOutput(io.Discard)
 	}
 
 	if *create {
