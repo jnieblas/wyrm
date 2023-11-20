@@ -6,9 +6,6 @@ import (
 	"io"
 	"log"
 	"os"
-
-	"github.com/jnieblas/wyrm/migration"
-	"github.com/jnieblas/wyrm/service"
 )
 
 func main() {
@@ -25,7 +22,7 @@ func main() {
 	flag.Parse()
 
 	if *provision {
-		migration.ProvisionDB()
+		provisionDB()
 		os.Exit(0)
 	}
 
@@ -35,27 +32,27 @@ func main() {
 
 	if *create {
 		if validateRequiredFlags("c", name, path, command) {
-			service.CreateScript(name, path, command, description)
+			createScript(name, path, command, description)
 		}
 	} else if *update {
 		if validateRequiredFlags("u", name, path, command) {
-			service.UpdateScript(name, path, command, description)
+			updateScript(name, path, command, description)
 		}
 	} else if *info {
 		if *name != "" {
-			service.GetScript(name)
+			getScript(name)
 		} else {
-			service.GetScripts()
+			getScripts()
 		}
 	} else {
 		if *name != "" {
-			service.ExecuteScript(name)
+			executeScript(name)
 		} else {
 			args := flag.Args()
 
 			if len(args) > 0 {
 				scriptName := args[0]
-				service.ExecuteScript(&scriptName)
+				executeScript(&scriptName)
 			} else {
 				fmt.Println("Invalid usage of wyrm.")
 				flag.Usage()

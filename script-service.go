@@ -1,45 +1,42 @@
-package service
+package main
 
 import (
 	"fmt"
 	"os/exec"
 	"os/user"
 	"strings"
-
-	"github.com/jnieblas/wyrm/dao"
-	"github.com/jnieblas/wyrm/dto"
 )
 
-func CreateScript(name *string, path *string, command *string, description *string) {
+func createScript(name *string, path *string, command *string, description *string) {
 	formatHomeDir(path)
 
-	script := dto.Script{
+	script := Script{
 		Name:        *name,
 		Path:        *path,
 		Command:     *command,
 		Description: *description,
 	}
 
-	dao.CreateScript(&script)
+	createScriptExecutor(&script)
 	fmt.Println("Script created successfully.")
 }
 
-func UpdateScript(name *string, path *string, command *string, description *string) {
+func updateScript(name *string, path *string, command *string, description *string) {
 	formatHomeDir(path)
 
-	script := dto.Script{
+	script := Script{
 		Name:        *name,
 		Path:        *path,
 		Command:     *command,
 		Description: *description,
 	}
 
-	dao.UpdateScript(&script)
+	updateScriptExecutor(&script)
 	fmt.Println("Script updated successfully.")
 }
 
-func GetScripts() {
-	scripts := dao.GetScripts()
+func getScripts() {
+	scripts := getScriptsExecutor()
 
 	fmt.Println("Name, Path, Command, Description")
 	for _, script := range scripts {
@@ -47,13 +44,13 @@ func GetScripts() {
 	}
 }
 
-func GetScript(name *string) {
-	script := dao.GetScript(*name)
+func getScript(name *string) {
+	script := getScriptExecutor(*name)
 	fmt.Print(script)
 }
 
-func ExecuteScript(name *string) {
-	script := dao.GetScript(*name)
+func executeScript(name *string) {
+	script := getScriptExecutor(*name)
 	cmd := exec.Command(script.Command)
 	cmd.Dir = script.Path
 	output, err := cmd.CombinedOutput()
