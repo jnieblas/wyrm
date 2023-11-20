@@ -1,19 +1,17 @@
-package migration
+package main
 
 import (
 	"log"
-
-	"github.com/jnieblas/wyrm/driver"
 )
 
 // This only needs to be called on install / version upgrade
-func ProvisionDB() {
+func provisionDB() {
 	log.SetPrefix("MIGRATION: ")
 	migration1_createScriptsTable()
 }
 
 func migration1_createScriptsTable() {
-	db := driver.GetConnection()
+	db := getConnection()
 	defer db.Close()
 
 	_, err := db.Exec(`

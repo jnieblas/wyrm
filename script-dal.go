@@ -1,16 +1,13 @@
-package dao
+package main
 
 import (
 	"fmt"
 	"log"
 	"os"
-
-	"github.com/jnieblas/wyrm/driver"
-	"github.com/jnieblas/wyrm/dto"
 )
 
-func GetScripts() []dto.Script {
-	db := driver.GetConnection()
+func getScriptsExecutor() []Script {
+	db := getConnection()
 	defer db.Close()
 
 	sql := "SELECT * FROM scripts"
@@ -24,10 +21,10 @@ func GetScripts() []dto.Script {
 	defer rows.Close()
 	log.Println("Scripts fetched successfully.")
 
-	var scripts []dto.Script
+	var scripts []Script
 
 	for rows.Next() {
-		script := dto.Script{}
+		script := Script{}
 		script.MapRows(rows)
 		scripts = append(scripts, script)
 	}
@@ -35,8 +32,8 @@ func GetScripts() []dto.Script {
 	return scripts
 }
 
-func GetScript(name string) dto.Script {
-	db := driver.GetConnection()
+func getScriptExecutor(name string) Script {
+	db := getConnection()
 	defer db.Close()
 
 	sql := "SELECT * FROM scripts WHERE name = ?"
@@ -44,13 +41,13 @@ func GetScript(name string) dto.Script {
 
 	log.Printf("Script '%s' fetched successfully.", name)
 
-	script := dto.Script{}
+	script := Script{}
 	script.MapRow(row)
 	return script
 }
 
-func CreateScript(script *dto.Script) {
-	db := driver.GetConnection()
+func createScriptExecutor(script *Script) {
+	db := getConnection()
 	defer db.Close()
 
 	sql := `
@@ -66,8 +63,8 @@ func CreateScript(script *dto.Script) {
 	}
 }
 
-func UpdateScript(script *dto.Script) {
-	db := driver.GetConnection()
+func updateScriptExecutor(script *Script) {
+	db := getConnection()
 	defer db.Close()
 
 	sql := `

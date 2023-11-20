@@ -1,4 +1,4 @@
-package driver
+package main
 
 import (
 	"database/sql"
@@ -10,7 +10,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func GetConnection() *sql.DB {
+func getConnection() *sql.DB {
 	dbPath, err := getDatabaseFilePath()
 	if err != nil {
 		fmt.Println("Unable to provision wyrm DB.")
@@ -28,8 +28,8 @@ func GetConnection() *sql.DB {
 }
 
 // For debugging purposes only
-func PrintTableMetadata(tableName string) {
-	db := GetConnection()
+func printTableMetadata(tableName string) {
+	db := getConnection()
 
 	sql := fmt.Sprintf("PRAGMA table_info(%s)", tableName)
 	rows, err := db.Query(sql)
