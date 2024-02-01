@@ -30,13 +30,13 @@ func getConnection() *sql.DB {
 // For debugging purposes only
 func printTableMetadata(tableName string) {
 	db := getConnection()
-
-	sql := fmt.Sprintf("PRAGMA table_info(%s)", tableName)
-	rows, err := db.Query(sql)
+	defer CloseDb(db)
+	pragmaSql := fmt.Sprintf("PRAGMA table_info(%s)", tableName)
+	rows, err := db.Query(pragmaSql)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer rows.Close()
+	defer CloseCursor(rows)
 
 	for rows.Next() {
 		fmt.Println(rows)
