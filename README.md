@@ -10,11 +10,11 @@ From root dir:
 5. Run `wyrm -provision` to instantiate wyrm's database.
 
 # Commands
-`-i [script_name]` - Print info about one or many scripts. No parameter will display info for all scripts.
+`-i [-name=script_name]` - Print info about one or many scripts. No parameter will display info for all scripts.
 
-`-c -name=<name> -path=<path> -command=<command> [-description=<description>]` - Create a script.
+`-c` - Create a script.
 
-`-u -name=<name> -path=<path> -command=<command> [-description=<description>]` - Update an existing script.
+`-u` - Update an existing script.
 
 `wyrm <script_name>` - Invoke a script.
 

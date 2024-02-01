@@ -15,9 +15,6 @@ func main() {
 	update := flag.Bool("u", false, "Update an existing script; requires -name, -path and -command")
 	info := flag.Bool("i", false, "List information about one or multiple scripts")
 	name := flag.String("name", "", "Script name, used to reference a script")
-	path := flag.String("path", "", "Absolute path to script")
-	command := flag.String("command", "", "Command needed to run script")
-	description := flag.String("description", "", "Script description")
 	flag.Parse()
 
 	if !*enableLogging {
@@ -30,13 +27,11 @@ func main() {
 	}
 
 	if *create {
-		if validateRequiredFlags("c", name, path, command) {
-			createScript(name, path, command, description)
-		}
+		wyrm := getCreateInput()
+		createScript(&wyrm)
 	} else if *update {
-		if validateRequiredFlags("u", name, path, command) {
-			updateScript(name, path, command, description)
-		}
+		wyrm := getCreateInput()
+		updateScript(&wyrm)
 	} else if *info {
 		if *name != "" {
 			getScript(name)
@@ -61,29 +56,13 @@ func main() {
 	}
 }
 
-func validateRequiredFlags(flagName string, name *string, path *string, command *string) bool {
-	var missingFlags []string
+func getCreateInput() (wyrm Script) {
+	reader := CreateWyrmReader()
+	reader.Ask("Give your wyrm a name: ", &wyrm.Name)
+	reader.Ask("Execution path: ", &wyrm.Path)
+	reader.Ask("Command to Execute: ", &wyrm.Command)
+	reader.Ask("Wyrm description (optional): ", &wyrm.Description)
 
-	if *name == "" {
-		missingFlags = append(missingFlags, "name")
-	}
-
-	if *path == "" {
-		missingFlags = append(missingFlags, "path")
-	}
-
-	if *command == "" {
-		missingFlags = append(missingFlags, "command")
-	}
-
-	if len(missingFlags) > 0 {
-		fmt.Printf("Missing required flags for -%s:\n", flagName)
-
-		for _, missingFlag := range missingFlags {
-			fmt.Printf("-%s\n", missingFlag)
-		}
-		return false
-	}
-
-	return true
+	log.Println(wyrm.String())
+	return wyrm
 }
