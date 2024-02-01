@@ -4,20 +4,14 @@ import (
 	"fmt"
 	"os/exec"
 	"os/user"
+	"runtime"
 	"strings"
 )
 
-func createScript(name *string, path *string, command *string, description *string) {
-	formatHomeDir(path)
+func createScript(script *Script) {
+	formatHomeDir(&script.Path)
 
-	script := Script{
-		Name:        *name,
-		Path:        *path,
-		Command:     *command,
-		Description: *description,
-	}
-
-	createScriptExecutor(&script)
+	createScriptExecutor(script)
 	fmt.Println("Script created successfully.")
 }
 
@@ -51,7 +45,15 @@ func getScript(name *string) {
 
 func executeScript(name *string) {
 	script := getScriptExecutor(*name)
-	cmd := exec.Command(script.Command)
+
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("cmd", "/C", script.Command, script.Path)
+	default: //Mac & Linux
+		cmd = exec.Command(script.Command)
+	}
+
 	cmd.Dir = script.Path
 	output, err := cmd.CombinedOutput()
 
@@ -63,10 +65,15 @@ func executeScript(name *string) {
 }
 
 func formatHomeDir(path *string) {
-	usr, err := user.Current()
-	if err != nil {
-		fmt.Println("Unable to find your home dir:", err)
-		return
+	if (*path)[1] == '~' {
+		usr, err := user.Current()
+
+		if err != nil {
+			fmt.Println("Unable to find your home dir:", err)
+			return
+		}
+
+		fmt.Println("HomeDir: ", usr)
+		*path = strings.Replace(*path, "~", usr.HomeDir, 1)
 	}
-	*path = strings.Replace(*path, "~", usr.HomeDir, 1)
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 )
@@ -11,6 +12,15 @@ type Script struct {
 	Path        string
 	Command     string
 	Description string
+}
+
+func CreateScript(name string, path string, command string, description string) Script {
+	return Script{
+		Name:        name,
+		Path:        path,
+		Command:     command,
+		Description: description,
+	}
 }
 
 func (script *Script) MapRows(rows *sql.Rows) {
@@ -32,9 +42,10 @@ func (script *Script) MapRow(row *sql.Row) {
 }
 
 func (script *Script) String() string {
-	return fmt.Sprintf(`
-Name: '%s'
-Path: '%s'
-Command: '%s'
-Description: '%s'`, script.Name, script.Path, script.Command, script.Description)
+	jsonData, err := json.Marshal(script)
+	if err != nil {
+		log.Fatal("Error parsing script:", err)
+	}
+
+	return string(jsonData)
 }

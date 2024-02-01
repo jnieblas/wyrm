@@ -30,9 +30,8 @@ func main() {
 	}
 
 	if *create {
-		if validateRequiredFlags("c", name, path, command) {
-			createScript(name, path, command, description)
-		}
+		wyrm := getCreateInput()
+		createScript(&wyrm)
 	} else if *update {
 		if validateRequiredFlags("u", name, path, command) {
 			updateScript(name, path, command, description)
@@ -86,4 +85,15 @@ func validateRequiredFlags(flagName string, name *string, path *string, command 
 	}
 
 	return true
+}
+
+func getCreateInput() (wyrm Script) {
+	reader := CreateWyrmReader()
+	reader.Ask("Give your wyrm a name: ", &wyrm.Name)
+	reader.Ask("Execution path: ", &wyrm.Path)
+	reader.Ask("Command to Execute: ", &wyrm.Command)
+	reader.Ask("Wyrm description (optional): ", &wyrm.Description)
+
+	fmt.Println(wyrm.String())
+	return wyrm
 }
