@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os/exec"
 	"os/user"
 	"runtime"
@@ -50,11 +51,11 @@ func executeScript(name *string) {
 	cmd.Dir = script.Path
 	output, err := cmd.CombinedOutput()
 
+	fmt.Println(string(output))
 	if err != nil {
-		fmt.Println("Command execution error:", err)
+		log.Fatal("Command execution error:", err)
 		return
 	}
-	fmt.Println(string(output))
 }
 
 func formatHomeDir(path *string) {

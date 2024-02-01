@@ -63,6 +63,6 @@ func getCreateInput() (wyrm Script) {
 	reader.Ask("Command to Execute: ", &wyrm.Command)
 	reader.Ask("Wyrm description (optional): ", &wyrm.Description)
 
-	fmt.Println(wyrm.String())
+	log.Println(wyrm.String())
 	return wyrm
 }
