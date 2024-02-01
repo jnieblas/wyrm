@@ -15,17 +15,10 @@ func createScript(script *Script) {
 	fmt.Println("Script created successfully.")
 }
 
-func updateScript(name *string, path *string, command *string, description *string) {
-	formatHomeDir(path)
+func updateScript(script *Script) {
+	formatHomeDir(&script.Path)
 
-	script := Script{
-		Name:        *name,
-		Path:        *path,
-		Command:     *command,
-		Description: *description,
-	}
-
-	updateScriptExecutor(&script)
+	updateScriptExecutor(script)
 	fmt.Println("Script updated successfully.")
 }
 
