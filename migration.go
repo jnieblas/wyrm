@@ -12,7 +12,7 @@ func provisionDB() {
 
 func migration1_createScriptsTable() {
 	db := getConnection()
-	defer db.Close()
+	defer CloseDb(db)
 
 	_, err := db.Exec(`
 		CREATE TABLE IF NOT EXISTS scripts (

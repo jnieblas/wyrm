@@ -8,17 +8,20 @@ import (
 
 func getScriptsExecutor() []Script {
 	db := getConnection()
-	defer db.Close()
 
-	sql := "SELECT * FROM scripts"
-	rows, err := db.Query(sql)
+	defer CloseDb(db)
+
+	selectSql := "SELECT * FROM scripts"
+	rows, err := db.Query(selectSql)
 
 	if err != nil {
 		fmt.Println("Unable to get scripts.")
 		log.Println(err)
-		log.Fatalf("Unable to execute SQL: %s", sql)
+		log.Fatalf("Unable to execute SQL: %s", selectSql)
 	}
-	defer rows.Close()
+
+	defer CloseCursor(rows)
+
 	log.Println("Scripts fetched successfully.")
 
 	var scripts []Script
@@ -34,10 +37,10 @@ func getScriptsExecutor() []Script {
 
 func getScriptExecutor(name string) Script {
 	db := getConnection()
-	defer db.Close()
+	defer CloseDb(db)
 
-	sql := "SELECT * FROM scripts WHERE name = ?"
-	row := db.QueryRow(sql, name)
+	selectSql := "SELECT * FROM scripts WHERE name = ?"
+	row := db.QueryRow(selectSql, name)
 
 	log.Printf("Script '%s' fetched successfully.", name)
 
@@ -48,35 +51,35 @@ func getScriptExecutor(name string) Script {
 
 func createScriptExecutor(script *Script) {
 	db := getConnection()
-	defer db.Close()
+	defer CloseDb(db)
 
-	sql := `
+	insertSql := `
 		INSERT INTO scripts (name, path, command, description) 
 		VALUES (?, ?, ?, ?)
 	`
-	_, err := db.Exec(sql, script.Name, script.Path, script.Command, script.Description)
+	_, err := db.Exec(insertSql, script.Name, script.Path, script.Command, script.Description)
 
 	if err != nil {
 		log.Println(err)
-		fmt.Printf("Unable to execute SQL: %s\n", sql)
+		fmt.Printf("Unable to execute SQL: %s\n", insertSql)
 		os.Exit(1)
 	}
 }
 
 func updateScriptExecutor(script *Script) {
 	db := getConnection()
-	defer db.Close()
+	defer CloseDb(db)
 
-	sql := `
+	updateSql := `
 		UPDATE scripts
 		SET name = ?, path = ?, command = ?, description = ?
 		WHERE name = ?
 	`
-	_, err := db.Exec(sql, script.Name, script.Path, script.Command, script.Description, script.Name)
+	_, err := db.Exec(updateSql, script.Name, script.Path, script.Command, script.Description, script.Name)
 
 	if err != nil {
 		log.Println(err)
-		log.Printf("Unable to execute SQL: %s\n", sql)
+		log.Printf("Unable to execute SQL: %s\n", updateSql)
 		fmt.Printf("Unable to update script with values:\n%v", script)
 		os.Exit(1)
 	}

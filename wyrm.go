@@ -62,7 +62,7 @@ func main() {
 }
 
 func validateRequiredFlags(flagName string, name *string, path *string, command *string) bool {
-	missingFlags := []string{}
+	var missingFlags []string
 
 	if *name == "" {
 		missingFlags = append(missingFlags, "name")
@@ -79,8 +79,8 @@ func validateRequiredFlags(flagName string, name *string, path *string, command 
 	if len(missingFlags) > 0 {
 		fmt.Printf("Missing required flags for -%s:\n", flagName)
 
-		for _, flag := range missingFlags {
-			fmt.Printf("-%s\n", flag)
+		for _, missingFlag := range missingFlags {
+			fmt.Printf("-%s\n", missingFlag)
 		}
 		return false
 	}

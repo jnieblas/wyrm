@@ -31,7 +31,7 @@ func (script *Script) MapRow(row *sql.Row) {
 	}
 }
 
-func (script Script) String() string {
+func (script *Script) String() string {
 	return fmt.Sprintf(`
 Name: '%s'
 Path: '%s'
